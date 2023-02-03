@@ -1,5 +1,5 @@
 let eventBus = new Vue()
-
+let now = new Date()
 Vue.component('kanban', {
     template: `
         <div class="todolist">
@@ -120,6 +120,8 @@ Vue.component('card', {
             <span>{{ card.date }}</span>
             <h4 v-show="card.dateChange != null">Дата изменения</h4>
             <span v-show="card.dateChange != null">{{ card.dateChange }}</span>
+            <h3 v-show="card.completed && card.column === 4">Выполнена в срок</h3>
+            <h3 v-show="!card.completed && card.column === 4">Просрочена</h3>
             
             <div v-show="cardModel" class="modalBackgrVis">
                 <div class="modalWindow">
@@ -148,7 +150,7 @@ Vue.component('card', {
             
             <div>
                 <input v-show="card.column <= 3" class="btn" type="button" value="Изменить" @click="changeCardModal">
-                <input  v-show="card.column != 4" class="btn" type="button" value="Перейти дальше" @click="changeColumn(card)">
+                <input v-show="card.column != 4" class="btn" type="button" value="Перейти дальше" @click="changeColumn(card)" @click="dateCompare(card)">
             </div>
         </div>
     `,
@@ -163,7 +165,12 @@ Vue.component('card', {
         },
         addDateChange(card) {
             card.dateChange = new Date().toLocaleString()
-        }
+        },
+        dateCompare(card) {
+            if (card.column === 4 && new Date(card.deadline) < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+                card.completed = false
+            }
+        },
     },
     props: {
         card: {
@@ -227,6 +234,7 @@ Vue.component('add-note', {
                 date: new Date().toLocaleString(),
                 dateChange: null,
                 column: 1,
+                completed: true
             }
             eventBus.$emit('addCard', card)
             this.task = null
