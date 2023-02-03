@@ -2,25 +2,20 @@
     font-family: "Droid Sans", sans-serif;
 }
 
-.todolist {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
 .formCard {
     text-align: center;
     width: 25%;
 }
 
 .columns {
+    margin: 20px 0 0 0;
     display: flex;
     justify-content: space-around;
-    width: 70%;
 }
 
 .columns > div {
-    width: 33%;
+    width: 24%;
+    min-height: 400px;
 }
 
 .columns > div > h2{
@@ -115,4 +110,10 @@ form {
     right: 20px;
     top: 0;
     cursor: pointer;
+}
+
+/* Drag and Drop*/
+
+.drop-zone {
+    background-color: lightgrey;
 }
