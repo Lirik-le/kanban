@@ -46,11 +46,16 @@ li {
     margin: 20px auto;
 }
 
-.card > div > h2 {
+.card  > h2 {
     margin: 0 0 20px 0;
+    word-break: break-all;
 }
 
-.card > p:first-of-type {
+.card  > h4 {
+    margin: 10px 0 10px 0;
+}
+
+.card > p {
     word-break: break-all;
 }
 
@@ -151,7 +156,3 @@ form {
 }
 
 /* Drag and Drop*/
-
-.drop-zone {
-    background-color: lightgrey;
-}
