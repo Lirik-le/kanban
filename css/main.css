@@ -44,19 +44,43 @@ li {
     width: 60%;
     max-width: 100%;
     margin: 20px auto;
+    position: relative;
 }
 
-.card  > h2 {
+.card > div > h2 {
     margin: 0 0 20px 0;
     word-break: break-all;
 }
 
-.card  > h4 {
+.card > div > h4 {
     margin: 10px 0 10px 0;
 }
 
-.card > p {
+.card > div > p {
     word-break: break-all;
+}
+
+.card > div > h1 {
+    transform: rotate(45deg);
+    width: 10px;
+    margin: 0;
+    position: absolute;
+    right: 20px;
+    top: 0;
+    cursor: pointer;
+}
+
+.card > div > div:first-of-type {
+    position: absolute;
+}
+
+.card > div > div:last-of-type {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.card > div > div > input {
+    margin: 10px 0;
 }
 
 input {

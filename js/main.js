@@ -10,23 +10,57 @@ Vue.component('kanban', {
                 </div>
                 <input class="btn" type="button" value="Добавить задачу" @click="changeModal">
             </div>
-           
             <div class="columns">
                 <div>
-                    <h2>Новые</h2>
-                    <card class="card" v-for="card in allCards" :card="card"></card>
+                    <h2>Запланированные задачи</h2>
+                    <div class="card"
+                         v-for="card in listOne">
+                        <card
+                            :card="card"
+                            :removeCard="removeCard"
+                            :changeColumn="changeColumn"
+                            :changeCardModal="changeCardModal">
+                        </card>
+                    </div>
                 </div>
                 
                 <div>
-                    <h2>В прогрессе</h2>
+                    <h2>Задачи в работе</h2>
+                    <div class="card"
+                         v-for="card in listTwo">
+                        <card
+                            :card="card"
+                            :removeCard="removeCard"
+                            :changeColumn="changeColumn"
+                            :changeCardModal="changeCardModal">
+                        </card>
+                    </div>
                 </div>
                 
                 <div>
-                    <h2>Выполненные</h2>
+                    <h2>Тестирование</h2>
+                    <div class="card"
+                         v-for="card in listThree">
+                        <card
+                            :card="card"
+                            :removeCard="removeCard"
+                            :changeColumn="changeColumn"
+                            :changeCardModal="changeCardModal">
+                        </card>
+                    </div>
                 </div>
                 
                 <div>
-                    <h2>Выполненные</h2>
+                    <h2>Выполненные задачи</h2>
+                    <div class="card"
+                         v-for="card in listFour">
+                        <card
+                            :card="card"
+                            :removeCard="removeCard"
+                            :changeColumn="changeColumn"
+                            :changeCardModal="changeCardModal">
+                        </card>
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,16 +69,41 @@ Vue.component('kanban', {
         return {
             allCards: [],
             modal: false,
+            cardModel: false,
         }
     },
     mounted() {
         eventBus.$on('addCard', card => {
-                this.allCards.push(card)
+            this.allCards.push(card)
         })
+    },
+    computed: {
+        listOne() {
+            return this.allCards.filter((item) => item.column === 1)
+        },
+        listTwo() {
+            return this.allCards.filter((item) => item.column === 2)
+        },
+        listThree() {
+            return this.allCards.filter((item) => item.column === 3)
+        },
+        listFour() {
+            return this.allCards.filter((item) => item.column === 4)
+        },
     },
     methods: {
         changeModal() {
             this.modal = !this.modal
+        },
+        removeCard(card) {
+            this.allCards.splice(this.allCards.indexOf(card), 1)
+            console.log(this.allCards)
+        },
+        changeColumn(card) {
+            card.column++
+        },
+        changeCardModal() {
+            this.cardModel = !this.cardModel
         },
     }
 })
@@ -52,18 +111,73 @@ Vue.component('kanban', {
 Vue.component('card', {
     template: `
         <div>
+            <h1 @click="removeCard(card)" v-show="card.column === 1">+</h1>
             <h2>{{ card.task }}</h2>  
             <p>{{ card.description }}</p>
             <h4>Дата сдачи:</h4>
             <span>{{ card.deadline }}</span>
             <h4>Дата создания</h4>
             <span>{{ card.date }}</span>
+            <h4 v-show="card.dateChange != null">Дата изменения</h4>
+            <span v-show="card.dateChange != null">{{ card.dateChange }}</span>
+            
+            <div v-show="cardModel" class="modalBackgrVis">
+                <div class="modalWindow">
+                    <form>
+                        <h1 class="cross" @click="changeCardModal">+</h1>
+                        <div class="addCard">
+                            <div>
+                                <p><label for="task">Задача:</label></p>
+                                <input required id="task" v-model="card.task" placeholder="Задача">
+                            </div>
+                        
+                            <div>
+                                <p><label for="description">Описание:</label></p>
+                                <textarea required id="description" v-model="card.description" placeholder="Описание"></textarea>
+                            </div>
+                        
+                            <div>
+                                <p><label  for="deadline">Дедалйн:</label></p>
+                                <input required id="deadline" v-model="card.deadline" placeholder="Дедлайн" type="date">
+                            </div>
+                        </div>
+                        <input @click.prevent="changeCardModal" @click="addDateChange(card)" class="btn addBtn" type="submit" value="Изменить">
+                    </form>
+                </div>
+            </div>
+            
+            <div>
+                <input v-show="card.column <= 3" class="btn" type="button" value="Изменить" @click="changeCardModal">
+                <input  v-show="card.column != 4" class="btn" type="button" value="Перейти дальше" @click="changeColumn(card)">
+            </div>
         </div>
     `,
+    data() {
+        return {
+            cardModel: false,
+        }
+    },
+    methods: {
+        changeCardModal() {
+            this.cardModel = !this.cardModel
+        },
+        addDateChange(card) {
+            card.dateChange = new Date().toLocaleString()
+        }
+    },
     props: {
         card: {
             type: Object
         },
+        removeCard: {
+            type: Function
+        },
+        changeColumn: {
+            type: Function
+        },
+        changeCardModal: {
+            type: Function
+        }
     },
 })
 
@@ -111,6 +225,7 @@ Vue.component('add-note', {
                 description: this.description,
                 deadline: this.deadline,
                 date: new Date().toLocaleString(),
+                dateChange: null,
                 column: 1,
             }
             eventBus.$emit('addCard', card)
