@@ -19,8 +19,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
-                            :goBack="goBack"
-                            :changeCardModal="changeCardModal">
+                            :goBack="goBack">
                         </card>
                     </div>
                 </div>
@@ -33,8 +32,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
-                            :goBack="goBack"
-                            :changeCardModal="changeCardModal">
+                            :goBack="goBack">
                         </card>
                     </div>
                 </div>
@@ -47,8 +45,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
-                            :goBack="goBack"
-                            :changeCardModal="changeCardModal">
+                            :goBack="goBack">
                         </card>
                     </div>
                 </div>
@@ -61,8 +58,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
-                            :goBack="goBack"
-                            :changeCardModal="changeCardModal">
+                            :goBack="goBack">
                         </card>
                     </div>
                 </div>
@@ -73,7 +69,6 @@ Vue.component('kanban', {
         return {
             allCards: [],
             modal: false,
-            cardModel: false,
         }
     },
     mounted() {
@@ -104,9 +99,6 @@ Vue.component('kanban', {
         },
         changeColumn(card) {
             card.column++
-        },
-        changeCardModal() {
-            this.cardModel = !this.cardModel
         },
         goBack(card) {
             card.column--
@@ -171,6 +163,8 @@ Vue.component('card', {
     methods: {
         changeCardModal() {
             this.cardModel = !this.cardModel
+            console.log(2)
+
         },
         addDateChange(card) {
             card.dateChange = new Date().toLocaleString()
