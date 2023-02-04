@@ -143,7 +143,7 @@ Vue.component('card', {
                                 <input required id="deadline" v-model="card.deadline" placeholder="Дедлайн" type="date">
                             </div>
                         </div>
-                        <input @click.prevent="changeCardModal" @click="addDateChange(card)" class="btn addBtn" type="submit" value="Изменить">
+                        <input @click="changeCardModal" @click="addDateChange(card)" class="btn addBtn" type="submit" value="Изменить">
                     </form>
                 </div>
             </div>
@@ -200,18 +200,18 @@ Vue.component('add-note', {
             <h1 class="cross" @click="changeModal">+</h1>
             <div class="addCard">
                 <div>
-                    <p><label for="task">Задача:</label></p>
-                    <input required id="task" v-model="task" placeholder="Задача">
+                    <label for="task">Задача:</label>
+                    <input name="qwe1" required="required" id="task" v-model="task" placeholder="Задача">
                 </div>
                 
                 <div>
-                    <p><label for="description">Описание:</label></p>
-                    <textarea required id="description" v-model="description" placeholder="Описание"></textarea>
+                    <label for="description">Описание:</label>
+                    <textarea name="qwe2" required="required" id="description" v-model="description" placeholder="Описание"></textarea>
                 </div>
                 
                 <div>
-                    <p><label  for="deadline">Дедалйн:</label></p>
-                    <input required id="deadline" v-model="deadline" placeholder="Дедлайн" type="date">
+                    <label for="deadline">Дедалйн:</label>
+                    <input name="qwe3" required="required" id="deadline" v-model="deadline" placeholder="Дедлайн" type="date">
                 </div>
             </div>
             <input @click="changeModal" class="btn addBtn" type="submit" value="Добавить">
