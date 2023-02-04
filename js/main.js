@@ -19,6 +19,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
+                            :goBack="goBack"
                             :changeCardModal="changeCardModal">
                         </card>
                     </div>
@@ -32,6 +33,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
+                            :goBack="goBack"
                             :changeCardModal="changeCardModal">
                         </card>
                     </div>
@@ -45,6 +47,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
+                            :goBack="goBack"
                             :changeCardModal="changeCardModal">
                         </card>
                     </div>
@@ -58,6 +61,7 @@ Vue.component('kanban', {
                             :card="card"
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
+                            :goBack="goBack"
                             :changeCardModal="changeCardModal">
                         </card>
                     </div>
@@ -97,7 +101,6 @@ Vue.component('kanban', {
         },
         removeCard(card) {
             this.allCards.splice(this.allCards.indexOf(card), 1)
-            console.log(this.allCards)
         },
         changeColumn(card) {
             card.column++
@@ -105,6 +108,9 @@ Vue.component('kanban', {
         changeCardModal() {
             this.cardModel = !this.cardModel
         },
+        goBack(card) {
+            card.column--
+        }
     }
 })
 
@@ -153,6 +159,7 @@ Vue.component('card', {
             <div>
                 <input v-show="card.column <= 3" class="btn" type="button" value="Изменить" @click="changeCardModal">
                 <input v-show="card.column != 4" class="btn" type="button" value="Перейти дальше" @click="changeColumn(card)" @click="dateCompare(card)">
+                <input v-show="card.column === 3" class="btn" type="button" value="Вернуться назад" @click="goBack(card)">
             </div>
         </div>
     `,
@@ -186,6 +193,9 @@ Vue.component('card', {
         },
         changeCardModal: {
             type: Function
+        },
+        goBack: {
+            type:Function
         }
     },
 })
@@ -236,6 +246,7 @@ Vue.component('add-note', {
                 date: new Date().toLocaleString(),
                 dateChange: null,
                 column: 1,
+                whyGoBack: [],
                 completed: true
             }
             eventBus.$emit('addCard', card)
