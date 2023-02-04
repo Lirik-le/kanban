@@ -1,14 +1,17 @@
+@font-face {
+    font-family: "Comic Sans";
+    src: url("/assets/fonts/Comic Sans MS.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
 * {
-    font-family: "Droid Sans", sans-serif;
+    font-family: 'Comic Sans';
 }
 
 .formCard {
     text-align: center;
     width: 25%;
-}
-
-.formCard {
-
 }
 
 .columns {
@@ -44,10 +47,26 @@ li {
     width: 60%;
     max-width: 100%;
     margin: 20px auto;
-    position: relative;
+}
+
+.columnOne {
+    background-color: rgba(255, 165, 0, 0.6);
+}
+
+.columnTwo {
+    background-color: rgba(255, 255, 0, 0.6);
+}
+
+.columnThree {
+    background-color: rgba(255, 161, 174, 0.6);
+}
+
+.columnFour {
+    background-color: rgba(0, 204, 0, 0.6);
 }
 
 .card > div > h2 {
+    width: 90%;
     margin: 0 0 20px 0;
     word-break: break-all;
 }
@@ -58,20 +77,31 @@ li {
 
 .card > div > p {
     word-break: break-all;
+    font-size: 20px;
 }
 
-.card > div > h1 {
+.cross {
     transform: rotate(45deg);
     width: 10px;
     margin: 0;
     position: absolute;
     right: 20px;
-    top: 0;
+    top: 0px;
     cursor: pointer;
 }
 
+.crossChange {
+    right: -5px;
+    top: -40px;
+}
+
+.crossCard {
+    right: 10px;
+    top: -10px;
+}
+
 .card > div > div:first-of-type {
-    position: absolute;
+    position: relative;
 }
 
 .card > div > div:last-of-type {
@@ -113,13 +143,13 @@ textarea {
     width: 250px;
     max-width: 250px;
     min-width: 250px;
-    height: 23px;
+    height: 26px;
     max-height: 250px;
     min-height: 23px;
     font-size: 16px;
     border: 2px solid black;
     border-radius: 5px;
-    padding: 4px 0 0 10px;
+    padding: 1px 0 0 10px;
 }
 
 .addCardName {
@@ -167,16 +197,6 @@ textarea {
 
 form {
     position: relative;
-}
-
-.cross {
-    transform: rotate(45deg);
-    width: 10px;
-    margin: 0;
-    position: absolute;
-    right: 20px;
-    top: 0;
-    cursor: pointer;
 }
 
 /* Drag and Drop*/

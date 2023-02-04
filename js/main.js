@@ -13,7 +13,7 @@ Vue.component('kanban', {
             <div class="columns">
                 <div>
                     <h2>Запланированные задачи</h2>
-                    <div class="card"
+                    <div class="card columnOne"
                          v-for="card in listOne">
                         <card
                             :card="card"
@@ -26,7 +26,7 @@ Vue.component('kanban', {
                 
                 <div>
                     <h2>Задачи в работе</h2>
-                    <div class="card"
+                    <div class="card columnTwo"
                          v-for="card in listTwo">
                         <card
                             :card="card"
@@ -39,7 +39,7 @@ Vue.component('kanban', {
                 
                 <div>
                     <h2>Тестирование</h2>
-                    <div class="card"
+                    <div class="card columnThree"
                          v-for="card in listThree">
                         <card
                             :card="card"
@@ -52,7 +52,7 @@ Vue.component('kanban', {
                 
                 <div>
                     <h2>Выполненные задачи</h2>
-                    <div class="card"
+                    <div class="card columnFour"
                          v-for="card in listFour">
                         <card
                             :card="card"
@@ -111,7 +111,9 @@ Vue.component('kanban', {
 Vue.component('card', {
     template: `
         <div>
-            <h1 @click="removeCard(card)" v-show="card.column === 1">+</h1>
+            <div>
+                <h1 class="cross crossCard" @click="removeCard(card)" v-show="card.column === 1">+</h1>
+            </div>
             <h2>{{ card.task }}</h2>  
             <p>{{ card.description }}</p>
             <h4>Дата сдачи:</h4>
@@ -126,7 +128,7 @@ Vue.component('card', {
             <div v-show="cardModel" class="modalBackgrVis">
                 <div class="modalWindow">
                     <form>
-                        <h1 class="cross" @click="changeCardModal">+</h1>
+                        <h1 class="cross crossChange" @click="changeCardModal">+</h1>
                         <div class="addCard">
                             <div>
                                 <p><label for="task">Задача:</label></p>
