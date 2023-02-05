@@ -1,5 +1,6 @@
 let eventBus = new Vue()
 let now = new Date()
+
 Vue.component('kanban', {
     template: `
         <div class="todolist">
@@ -101,8 +102,9 @@ Vue.component('kanban', {
             card.column++
         },
         goBack(card) {
+            card.wasComingBack = true
             card.column--
-        }
+        },
     }
 })
 
@@ -120,6 +122,12 @@ Vue.component('card', {
             <span>{{ card.date }}</span>
             <h4 v-show="card.dateChange != null">Дата изменения</h4>
             <span v-show="card.dateChange != null">{{ card.dateChange }}</span>
+            <h4 v-show="card.whyGoBack.length > 0">Причины возврата</h4>
+            <ul>
+                <li v-for="reas in card.whyGoBack">
+                    {{ reas }}
+                </li>
+            </ul>
             <h3 v-show="card.completed && card.column === 4">Выполнена в срок</h3>
             <h3 v-show="!card.completed && card.column === 4">Просрочена</h3>
             
@@ -143,28 +151,41 @@ Vue.component('card', {
                                 <input required id="deadline" v-model="card.deadline" placeholder="Дедлайн" type="date">
                             </div>
                         </div>
-                        <input @click="changeCardModal" @click="addDateChange(card)" class="btn addBtn" type="submit" value="Изменить">
+                        <input @click.prevent="addDateChange(card)" @click="changeCardModal" class="btn addBtn" type="button" value="Изменить">
+                    </form>
+                </div>
+            </div>
+            
+            <div v-show="card.wasComingBack" class="modalBackgrVis">
+                <div class="modalWindow">
+                    <form  @submit.prevent="reasonForGoingBack(card)">
+                        <div class="addCard">
+                            <div>
+                                <p><label for="reason">Причина возврата:</label></p>
+                                <input required id="reason" v-model="reason" placeholder="Замечания заказчика">
+                            </div>
+                        </div>
+                        <input class="btn addBtn" type="submit" value="Изменить">
                     </form>
                 </div>
             </div>
             
             <div>
                 <input v-show="card.column <= 3" class="btn" type="button" value="Изменить" @click="changeCardModal">
-                <input v-show="card.column != 4" class="btn" type="button" value="Перейти дальше" @click="changeColumn(card)" @click="dateCompare(card)">
                 <input v-show="card.column === 3" class="btn" type="button" value="Вернуться назад" @click="goBack(card)">
+                <input v-show="card.column != 4" class="btn" type="button" value="Перейти дальше" @click.prevent="changeColumn(card), dateCompare(card)">
             </div>
         </div>
     `,
     data() {
         return {
             cardModel: false,
+            reason: '',
         }
     },
     methods: {
         changeCardModal() {
             this.cardModel = !this.cardModel
-            console.log(2)
-
         },
         addDateChange(card) {
             card.dateChange = new Date().toLocaleString()
@@ -174,6 +195,11 @@ Vue.component('card', {
                 card.completed = false
             }
         },
+        reasonForGoingBack(card) {
+            card.whyGoBack.push(this.reason)
+            this.reason = ''
+            card.wasComingBack = false
+        }
     },
     props: {
         card: {
@@ -185,12 +211,9 @@ Vue.component('card', {
         changeColumn: {
             type: Function
         },
-        changeCardModal: {
+        goBack: {
             type: Function
         },
-        goBack: {
-            type:Function
-        }
     },
 })
 
@@ -201,17 +224,17 @@ Vue.component('add-note', {
             <div class="addCard">
                 <div>
                     <label for="task">Задача:</label>
-                    <input name="qwe1" required="required" id="task" v-model="task" placeholder="Задача">
+                    <input name="qwe1" required id="task" v-model="task" placeholder="Задача">
                 </div>
                 
                 <div>
                     <label for="description">Описание:</label>
-                    <textarea name="qwe2" required="required" id="description" v-model="description" placeholder="Описание"></textarea>
+                    <textarea name="qwe2" required id="description" v-model="description" placeholder="Описание"></textarea>
                 </div>
                 
                 <div>
                     <label for="deadline">Дедалйн:</label>
-                    <input name="qwe3" required="required" id="deadline" v-model="deadline" placeholder="Дедлайн" type="date">
+                    <input name="qwe3" required id="deadline" v-model="deadline" placeholder="Дедлайн" type="date">
                 </div>
             </div>
             <input @click="changeModal" class="btn addBtn" type="submit" value="Добавить">
@@ -241,7 +264,8 @@ Vue.component('add-note', {
                 dateChange: null,
                 column: 1,
                 whyGoBack: [],
-                completed: true
+                wasComingBack: false,
+                completed: true,
             }
             eventBus.$emit('addCard', card)
             this.task = null
