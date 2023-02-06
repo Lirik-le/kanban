@@ -199,4 +199,8 @@ form {
     position: relative;
 }
 
+.overdue {
+    background-color: rgba(255, 0, 0, 0.6);
+}
+
 /* Drag and Drop*/
