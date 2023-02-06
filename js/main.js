@@ -81,6 +81,7 @@ Vue.component('kanban', {
         eventBus.$on('addCard', card => {
             this.allCards.push(card)
         })
+        localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
         this.allCards = JSON.parse(localStorage.getItem("allCardLS"));
 
     },
