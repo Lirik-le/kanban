@@ -7,7 +7,7 @@ Vue.component('kanban', {
             <div class="formCard">
                 <h1>Kanban-доска</h1>
                 <div v-show="modal" class="modalBackgrVis">
-                    <add-note class="modalWindow" :allCards="allCards" :changeModal="changeModal"></add-note>
+                    <add-note :saveCard="saveCard" class="modalWindow" :changeModal="changeModal"></add-note>
                 </div>
                 <input class="btn" type="button" value="Добавить задачу" @click="changeModal">
             </div>
@@ -21,7 +21,7 @@ Vue.component('kanban', {
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
                             :goBack="goBack"
-                            :allCards="allCards">
+                            :saveCard="saveCard">
                         </card>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ Vue.component('kanban', {
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
                             :goBack="goBack"
-                            :allCards="allCards">
+                            :saveCard="saveCard">
                         </card>
                     </div>
                 </div>
@@ -49,7 +49,7 @@ Vue.component('kanban', {
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
                             :goBack="goBack"
-                            :allCards="allCards">
+                            :saveCard="saveCard">
                         </card>
                     </div>
                 </div>
@@ -64,7 +64,7 @@ Vue.component('kanban', {
                             :removeCard="removeCard"
                             :changeColumn="changeColumn"
                             :goBack="goBack"
-                            :allCards="allCards">
+                            :saveCard="saveCard">
                         </card>
                     </div>
                 </div>
@@ -78,12 +78,10 @@ Vue.component('kanban', {
         }
     },
     mounted() {
+        this.allCards = JSON.parse(localStorage.getItem("allCardLS"))
         eventBus.$on('addCard', card => {
             this.allCards.push(card)
         })
-        localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
-        this.allCards = JSON.parse(localStorage.getItem("allCardLS"));
-
     },
     computed: {
         listOne() {
@@ -105,17 +103,21 @@ Vue.component('kanban', {
         },
         removeCard(card) {
             this.allCards.splice(this.allCards.indexOf(card), 1)
-            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
+            this.saveCard()
         },
         changeColumn(card) {
             card.column++
-            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
+            this.saveCard()
         },
         goBack(card) {
             card.wasComingBack = true
             card.column--
-            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
+            this.saveCard()
         },
+        saveCard() {
+            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
+            console.log(JSON.parse(localStorage.getItem("allCardLS")))
+        }
     }
 })
 
@@ -200,20 +202,19 @@ Vue.component('card', {
         },
         addDateChange(card) {
             card.dateChange = new Date().toLocaleString()
-            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
+            this.saveCard()
         },
         dateCompare(card) {
             if (card.column === 4 && new Date(card.deadline) < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
                 card.completed = false
             }
-            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
+            this.saveCard()
         },
         reasonForGoingBack(card) {
             card.whyGoBack.push(this.reason)
             this.reason = ''
             card.wasComingBack = false
-            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
-
+            this.saveCard()
         }
     },
     props: {
@@ -229,8 +230,8 @@ Vue.component('card', {
         goBack: {
             type: Function
         },
-        allCards: {
-            type: Array
+        saveCard: {
+            type: Function
         }
     },
 })
@@ -262,8 +263,8 @@ Vue.component('add-note', {
         changeModal: {
             type: Function
         },
-        allCards: {
-            type: Array
+        saveCard: {
+            type: Function
         }
     },
     data() {
@@ -289,8 +290,7 @@ Vue.component('add-note', {
                 completed: true,
             }
             eventBus.$emit('addCard', card)
-            localStorage.setItem('allCardLS', JSON.stringify(this.allCards))
-            this.allCards = JSON.parse(localStorage.getItem("allCardLS"));
+            this.saveCard()
             this.task = null
             this.description = null
             this.deadline = null
